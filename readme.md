@@ -61,7 +61,7 @@
   System.out.print("numHabitacion: ");
   numHabitacion=sc.nextLine();
   
-  pstmt=conexion.prepareStatement("INSERT INTO hoteles (codHotel, 						   nomHotel) VALUES (?,?)");
+  pstmt=conexion.prepareStatement("INSERT INTO hoteles (codHotel,nomHotel) VALUES (?,?)");
   pstmt.setString(1,codHotel);
   pstmt.setString(2,nomHotel);
   
@@ -85,7 +85,7 @@
   System.out.println("activa: ");
   habitacion.setPreciodia(sc.nextInt());
   try{
-      pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, 					preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
+      pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
       pstmt.setInt(1, habitacion.getCapacidad());
       pstmt.setInt(2, habitacion.getPreciodia());
       pstmt.setInt(3, habitacion.getActiva());
@@ -109,7 +109,7 @@
   PreparedStatement pstmtBorrar;
   try {
   	codHotel = sc.nextLine();
-  	pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE 					      codHotel=?");
+  	pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
   	pstmtBorrar.setString(1, codHotel);
       rows = pstmtBorrar.executeUpdate();
       if (rows > 0) {
@@ -135,7 +135,7 @@
   rs = stmt.executeQuery("select * from hoteles");
   try{
       while (rs.next()) {
-          System.out.println("codHotel = " + rs.getString("codHotel") + "\t#" + 				"nomHotel =	 " + rs.getString("nomHotel") + "#\t");
+          System.out.println("codHotel = " + rs.getString("codHotel") + "\t#" + "nomHotel =	 " + rs.getString("nomHotel") + "#\t");
       }
       rs.close();
       stmt.close();
