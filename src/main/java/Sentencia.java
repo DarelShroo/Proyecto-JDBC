@@ -140,6 +140,8 @@ public class Sentencia {
         PreparedStatement pstmtComprobarHabitaciones = pstmt;
         Habitacion habitacion;
         ArrayList<Habitacion> arrayListHabitacion = new ArrayList<>();
+        Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
+        Statement stmt = conexion.createStatement();
         int regBorrar;
         int pos = 0;
         if (!nomBd.equals("access")) {
@@ -203,7 +205,6 @@ public class Sentencia {
                     pstmtComprobarHabitaciones.close();
                 } else if (pstmtSelect != null) {
                     pstmtSelect.close();
-
                 }
             }
         } else {
