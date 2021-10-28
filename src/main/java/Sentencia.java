@@ -156,7 +156,7 @@ public class Sentencia {
                     arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
                     pos++;
                 }
-                System.out.println("¿Que numero de registro desea modificar?");
+                System.out.println("¿Que numero de registro desea borrar?");
                 regBorrar = sc.nextInt();
 
                 habitacion = arrayListHabitacion.get(regBorrar);
@@ -196,7 +196,12 @@ public class Sentencia {
                 }
             } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("\nA ocurrido un error al borrar el registro o los registros \n");
-            } catch (SQLException e) {
+            }catch(NullPointerException e){
+                System.out.println("Algún parámetro está a null");
+            }
+            catch (InputMismatchException e){
+                System.out.println("A ocurrido un error");
+            }catch (SQLException e) {
                 e.printStackTrace();
             } finally {
                 if (pstmtBorrar != null) {
@@ -253,7 +258,9 @@ public class Sentencia {
                 pstmt.setString(4, habitacion.getCodHotel());
                 pstmt.setString(5, habitacion.getNumHabitacion());
                 pstmt.executeUpdate();
-            } catch (SQLException e) {
+            }catch(NullPointerException e){
+                System.out.println("Algún parámetro está a null");
+            } catch (SQLException | InputMismatchException e) {
                 System.out.println("A ocurrido un error\n");
             } finally {
                 if (pstmt != null) {
@@ -319,12 +326,10 @@ public class Sentencia {
                     if (rs.next()) {
                         continua = false;
                         System.out.println("\nEl código de hotel existe\n");
-                        cstmtProcInsertarHabitacion.setString(1, this.codHotel);
                     } else {
                         System.out.println("El código de hotel no existe\n");
                     }
                 }
-
                 System.out.println();
                 System.out.print("numHabitacion: ");
                 this.numHabitacion = this.sc.nextLine();
@@ -366,6 +371,8 @@ public class Sentencia {
 
             } catch (MysqlDataTruncation e) {
                 System.out.println("Algún parámetro introducido es mas largo del permitido\n");
+            } catch (SQLIntegrityConstraintViolationException e){
+                System.out.println("A ocurrido un quebrantamiento de claves");
             } catch (SQLException e) {
                 System.out.println("A ocurrido algún error\n");
                 e.printStackTrace();
@@ -400,7 +407,6 @@ public class Sentencia {
                     if (rows2) {
                         continua = false;
                         System.out.println("\nEl código de hotel existe\n");
-                        cstmtProcCantidadHabitaciones.setString(1, this.codHotel);
                     } else {
                         System.out.println("El código de hotel no existe\n");
                     }
