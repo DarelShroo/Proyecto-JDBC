@@ -24,7 +24,7 @@ public class Conexion {
                     this.conexion = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=bdhoteles", "sa", "sanandreas85");
                     break;
                 case"access":
-                    this.conexion = DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/bdhotelesAccess.accdb");
+                    this.conexion = DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/darel_martinez_caballero_access.accdb");
                     break;
             }
         } catch (SQLException throwables) {
