@@ -56,7 +56,6 @@ public class Sentencia {
         this.sc = new Scanner(System.in);
         boolean continua = true;
         int rows;
-        if (!nomBd.equals("access")) {
             try {
                 System.out.println("hoteles disponible:");
                 visualizarHoteles(stmt);
@@ -96,7 +95,7 @@ public class Sentencia {
                     if (activa == 0 || activa == 1) {
                         continua = false;
                     } else {
-                        System.out.print("Activa solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
+                        System.out.print("\nmActiva solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
                         activa = sc.nextInt();
                         System.out.println();
                     }
@@ -116,7 +115,7 @@ public class Sentencia {
                 }
 
             } catch (SQLIntegrityConstraintViolationException | SQLServerException e) {
-                System.out.println("A ocurrido un quebrantamiento de claves\n2");
+                System.out.println("A ocurrido un quebrantamiento de claves\n");
             } catch (MysqlDataTruncation e){
                 System.out.println("Alguno de los parámetros introducidos es demasiado largo para ese campo");
             } catch (SQLException e) {
@@ -127,9 +126,7 @@ public class Sentencia {
             } finally {
                 close(db, stmt, pstmt, null, null);
             }
-        } else {
-            System.out.println("No es posible en una base de datos access");
-        }
+
     }
 
     protected void borrarHabitacion(Conexion db, PreparedStatement pstmt, String nomBd) throws SQLException {
@@ -144,7 +141,6 @@ public class Sentencia {
         Statement stmt = conexion.createStatement();
         int regBorrar;
         int pos = 0;
-        if (!nomBd.equals("access")) {
             PreparedStatement pstmtSelect = pstmt;
             PreparedStatement pstmtBorrar = pstmt;
             try {
@@ -156,8 +152,8 @@ public class Sentencia {
                     arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
                     pos++;
                 }
-                System.out.println("¿Que numero de registro desea borrar?");
-                regBorrar = sc.nextInt();
+                System.out.print("\n¿Que numero de registro desea borrar?: ");
+                regBorrar = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size()-1);
 
                 habitacion = arrayListHabitacion.get(regBorrar);
                 numHabitacion = habitacion.getNumHabitacion();
@@ -212,9 +208,19 @@ public class Sentencia {
                     pstmtSelect.close();
                 }
             }
-        } else {
-            System.out.println("No es posible en una base de datos access");
+    }
+
+    private int compruebaTamanioIndex(int nextInt, int tamanioIndex) {
+        boolean continua = true;
+        while(continua){
+            if(nextInt > tamanioIndex){
+                System.out.print("Escriba un numero de registro válido: ");
+                nextInt = sc.nextInt();
+            }else {
+                continua=false;
+            }
         }
+        return nextInt;
     }
 
     public void modificarHabitacion(Conexion db, String nomBd) throws SQLException {
@@ -223,7 +229,6 @@ public class Sentencia {
         ArrayList<Habitacion> arrayListHabitacion = new ArrayList<>();
         PreparedStatement pstmt = null;
         int regMod;
-        if (!nomBd.equals("access")) {
             try {
                 int pos = 0;
                 pstmt = db.conexion().prepareStatement("select * from habitaciones");
@@ -236,7 +241,7 @@ public class Sentencia {
                     pos++;
                 }
                 System.out.println("¿Que registro desea modificar?");
-                regMod = sc.nextInt();
+                regMod = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size()-1);
                 habitacion = arrayListHabitacion.get(regMod);
                 System.out.println("Vas a modificar un registro con: ");
                 System.out.print("codHotel: " + habitacion.getCodHotel() + "\n");
@@ -244,11 +249,11 @@ public class Sentencia {
                 System.out.print("capacidad: ");
                 habitacion.setCapacidad(sc.nextInt());
                 System.out.println();
-                System.out.println("preciodia: ");
-                habitacion.setCapacidad(sc.nextInt());
-                System.out.println();
-                System.out.println("activa: ");
+                System.out.print("preciodia: ");
                 habitacion.setPreciodia(sc.nextInt());
+                System.out.println();
+                System.out.print("activa: ");
+                habitacion.setActiva(compruebaActiva(sc.nextInt()));
                 System.out.println();
 
                 pstmt = db.conexion().prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
@@ -257,7 +262,10 @@ public class Sentencia {
                 pstmt.setInt(3, habitacion.getActiva());
                 pstmt.setString(4, habitacion.getCodHotel());
                 pstmt.setString(5, habitacion.getNumHabitacion());
-                pstmt.executeUpdate();
+                int rows = pstmt.executeUpdate();
+                if(rows>0){
+                    System.out.println("Modificación realizada");
+                }
             }catch(NullPointerException e){
                 System.out.println("Algún parámetro está a null");
             } catch (SQLException | InputMismatchException e) {
@@ -270,9 +278,6 @@ public class Sentencia {
                     db.conexion().close();
                 }
             }
-        } else {
-            System.out.println("No es posible en una base de datos access");
-        }
     }
 
     public void procListaHabitacionesNomHotel(Conexion db, String nomBd) throws SQLException {
@@ -343,16 +348,7 @@ public class Sentencia {
                 System.out.println();
                 System.out.print("activa: ");
                 this.activa = this.sc.nextInt();
-                continua = true;
-                while (continua) {
-                    if (activa == 0 || activa == 1) {
-                        continua = false;
-                    } else {
-                        System.out.print("Activa solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
-                        activa = sc.nextInt();
-                        System.out.println();
-                    }
-                }
+                this.activa = compruebaActiva(this.activa);
                 System.out.println();
                 cstmtProcInsertarHabitacion = db.conexion().prepareCall("{call insertarHabitacion(?,?,?,?,?,?,?)}");
 
@@ -384,6 +380,20 @@ public class Sentencia {
         } else {
             System.out.println("No hay procedimientos en access");
         }
+    }
+
+    private int compruebaActiva(int activa) {
+        boolean continua = true;
+        while (continua) {
+            if (activa == 0 || activa == 1) {
+                continua = false;
+            } else {
+                System.out.print("Activa solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
+                activa = sc.nextInt();
+                System.out.println();
+            }
+        }
+        return activa;
     }
 
     public void procCantidadHabitaciones(Conexion db, Statement stmt, String nomBd) throws SQLException {
@@ -452,10 +462,10 @@ public class Sentencia {
         this.sc = new Scanner(System.in);
         String coddnionie;
         CallableStatement cstmtFunTotalEstancias = null;
-        System.out.println("Escribe un cod dni o nie");
-        coddnionie = sc.nextLine();
-        System.out.println();
         if (!nomBd.equals("access")) {
+            System.out.println("Escribe un cod dni o nie");
+            coddnionie = sc.nextLine();
+            System.out.println();
             try {
                 cstmtFunTotalEstancias = db.conexion().prepareCall("{? = call sumaTotalEstancias(?)}");
                 cstmtFunTotalEstancias.registerOutParameter(1, Types.INTEGER);
