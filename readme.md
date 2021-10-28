@@ -4,45 +4,45 @@
 
 - Conexión
 
-  - Access
+    - Access
 
-    ~~~java
-    DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/bdhotelesAccess.accdb");
-    
-    ~~~
+      ~~~java
+      DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/bdhotelesAccess.accdb");
+      
+      ~~~
 
-    
 
-  - MySql
 
-    ~~~java
-    DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
-    ~~~
+- MySql
 
-    
+  ~~~java
+  DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
+  ~~~
 
-  - SQLServer
 
-    ~~~java
-    DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=bdhoteles", "sa", "1234");
-    ~~~
 
-    
+- SQLServer
 
-  - Visualizar
+  ~~~java
+  DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=bdhoteles", "sa", "1234");
+  ~~~
+
+
+
+- Visualizar
 
   ~~~java
   import java.sql.*;
   
   PreparedStament pstmt=null;
-  Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
-  
-  ResultSet  rs = null;
-  Statement stmt = conexion.createStament();
-  rs = stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
+          Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
+
+          ResultSet  rs = null;
+          Statement stmt = conexion.createStament();
+          rs = stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
   ~~~
 
-  
+
 
 - Inserción
 
@@ -75,29 +75,29 @@
 
   ~~~java
 PreparedStament = null;
-  Scanner sc = new Scanner(System.in);
-  Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
+Scanner sc = new Scanner(System.in);
+Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
 
-  System.out.print("capacidad: ");
-  habitacion.setCapacidad(sc.nextInt());
+System.out.print("capacidad: ");
+habitacion.setCapacidad(sc.nextInt());
 
-  System.out.println("preciodia: ");
-  habitacion.setCapacidad(sc.nextInt());
-  System.out.println("activa: ");
-  habitacion.setPreciodia(sc.nextInt());
-  try{
-  	pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
-      pstmt.setInt(1, habitacion.getCapacidad());
-      pstmt.setInt(2, habitacion.getPreciodia());
-      pstmt.setInt(3, habitacion.getActiva());
-      pstmt.setString(4, habitacion.getCodHotel());
-      pstmt.setString(5, habitacion.getNumHabitacion());
-      pstmt.executeUpdate();
-      pstmt.close();
-      conexion.close();
-  }catch(SQLException e){
-  	e.printStackTrace
-  }
+System.out.println("preciodia: ");
+habitacion.setCapacidad(sc.nextInt());
+System.out.println("activa: ");
+habitacion.setPreciodia(sc.nextInt());
+try{
+pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
+pstmt.setInt(1, habitacion.getCapacidad());
+pstmt.setInt(2, habitacion.getPreciodia());
+pstmt.setInt(3, habitacion.getActiva());
+pstmt.setString(4, habitacion.getCodHotel());
+pstmt.setString(5, habitacion.getNumHabitacion());
+pstmt.executeUpdate();
+pstmt.close();
+conexion.close();
+}catch(SQLException e){
+e.printStackTrace
+}
   ~~~
 
   
@@ -105,24 +105,24 @@ PreparedStament = null;
 - Borrado
 
   ~~~
-  Scanner sc = new Scanner(System.in);
-  Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
-  PreparedStatement pstmtBorrar;
-  try {
-  	codHotel = sc.nextLine();
-      pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
-      pstmtBorrar.setString(1, codHotel);
-      rows = pstmtBorrar.executeUpdate();
-      if (rows > 0) {
-      	System.out.println("\nBorrado con éxito\n");
-      } else {
-       	System.out.println("\nNo se a borrado ningún registro\n");
-      }
-      pstmt.close();
-      conexion.close();
-      } catch (SQLIntegrityConstraintViolationException e) {
-  		System.out.println("\nA ocurrido un error al borrar el registro o los registros\n");
-  }
+Scanner sc = new Scanner(System.in);
+Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
+PreparedStatement pstmtBorrar;
+try {
+codHotel = sc.nextLine();
+pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
+pstmtBorrar.setString(1, codHotel);
+rows = pstmtBorrar.executeUpdate();
+if (rows > 0) {
+System.out.println("\nBorrado con éxito\n");
+} else {
+System.out.println("\nNo se a borrado ningún registro\n");
+}
+pstmt.close();
+conexion.close();
+} catch (SQLIntegrityConstraintViolationException e) {
+System.out.println("\nA ocurrido un error al borrar el registro o los registros\n");
+}
   ~~~
 
   
@@ -146,7 +146,7 @@ PreparedStament = null;
   }
   ~~~
 
-  
+
 
 - Procedimientos con parámetros de entrada y salida
 
