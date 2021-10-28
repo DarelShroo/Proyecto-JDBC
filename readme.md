@@ -25,12 +25,11 @@
 
     ~~~java
     DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=bdhoteles", "sa", "1234");
-    
     ~~~
 
     
 
-- Visualizar
+  - Visualizar
 
   ~~~java
   import java.sql.*;
@@ -49,6 +48,7 @@
 
   ~~~~java
   import java.sql.*;
+  import java.util.*;
   
   String codHotel;
   String nomHotel;
@@ -70,22 +70,23 @@
   	System.out.println("Se a insertado\n");
   }
 
+
 - Actualización
 
   ~~~java
-  PreparedStament = null;
-  Scanner sc = new Scanner;
+PreparedStament = null;
+  Scanner sc = new Scanner(System.in);
   Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
-  
+
   System.out.print("capacidad: ");
   habitacion.setCapacidad(sc.nextInt());
-  
+
   System.out.println("preciodia: ");
   habitacion.setCapacidad(sc.nextInt());
   System.out.println("activa: ");
   habitacion.setPreciodia(sc.nextInt());
   try{
-      pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
+  	pstmt = conexion.prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
       pstmt.setInt(1, habitacion.getCapacidad());
       pstmt.setInt(2, habitacion.getPreciodia());
       pstmt.setInt(3, habitacion.getActiva());
@@ -94,8 +95,8 @@
       pstmt.executeUpdate();
       pstmt.close();
       conexion.close();
-     }catch(SQLException e){
-     e.printStackTrace
+  }catch(SQLException e){
+  	e.printStackTrace
   }
   ~~~
 
@@ -109,18 +110,19 @@
   PreparedStatement pstmtBorrar;
   try {
   	codHotel = sc.nextLine();
-  	pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
-  	pstmtBorrar.setString(1, codHotel);
+      pstmtBorrar = conexion.prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
+      pstmtBorrar.setString(1, codHotel);
       rows = pstmtBorrar.executeUpdate();
       if (rows > 0) {
-  		System.out.println("\nBorrado con éxito\n");
+      	System.out.println("\nBorrado con éxito\n");
       } else {
-      	System.out.println("\nNo se a borrado ningún registro\n");
+       	System.out.println("\nNo se a borrado ningún registro\n");
       }
       pstmt.close();
       conexion.close();
-  } catch (SQLIntegrityConstraintViolationException e) {
-  	System.out.println("\nA ocurrido un error al borrar el registro o los registros 						\n");
+      } catch (SQLIntegrityConstraintViolationException e) {
+  		System.out.println("\nA ocurrido un error al borrar el registro o los registros\n");
+  }
   ~~~
 
   
@@ -134,13 +136,13 @@
   Stament stmt = conexion.createStament;
   rs = stmt.executeQuery("select * from hoteles");
   try{
-      while (rs.next()) {
+  	while (rs.next()) {
           System.out.println("codHotel = " + rs.getString("codHotel") + "\t#" + "nomHotel =	 " + rs.getString("nomHotel") + "#\t");
-      }
+  	}
       rs.close();
       stmt.close();
-     }catch(SQLException e){
-     e.printStackTrace
+      }catch(SQLException e) {
+       	e.printStackTrace
   }
   ~~~
 
@@ -155,6 +157,3 @@
   ~~~
   mvn compile exec:java
   ~~~
-
-  
-

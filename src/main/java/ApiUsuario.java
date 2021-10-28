@@ -1,9 +1,6 @@
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
 public class ApiUsuario {
@@ -113,4 +110,3 @@ public class ApiUsuario {
         }
     }
 }
-
