@@ -1,6 +1,9 @@
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
 import java.util.Scanner;
 
 public class ApiUsuario {
@@ -16,7 +19,7 @@ public class ApiUsuario {
     public ApiUsuario() {
     }
 
-    public void main(String[] args){
+    public void main(String[] args) {
         sc = new Scanner(System.in);
         continuar = "continuar";
         sentencia = new Sentencia();
@@ -74,7 +77,7 @@ public class ApiUsuario {
             }
         } catch (SQLIntegrityConstraintViolationException e) {
             System.out.println("Existe un quebrantamiento de claves");
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             System.out.println("Has introducido null en algúno de los parámetros");
             e.printStackTrace();
         } catch (Exception e) {
@@ -85,8 +88,8 @@ public class ApiUsuario {
     }
 
     private Conexion db(String nomBd) {
-            db = new Conexion(nomBd);
-            return db;
+        db = new Conexion(nomBd);
+        return db;
     }
 
     private void cambioBd() {
@@ -97,7 +100,7 @@ public class ApiUsuario {
 
         do {
             nomBd = sc.nextLine().toLowerCase();
-            if (!nomBd.equals("mysql") && !nomBd.equals("sqlserver")  && !nomBd.equals("access")) {
+            if (!nomBd.equals("mysql") && !nomBd.equals("sqlserver") && !nomBd.equals("access")) {
                 System.out.println("No has escrito bien el nombre de la bd\n");
             }
             System.out.println();

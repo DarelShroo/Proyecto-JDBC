@@ -27,7 +27,7 @@ public class Conexion {
                     this.conexion = DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/darel_martinez_caballero_access.accdb");
                     break;
             }
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             System.out.println("A ocurrido un error\n");
         }
         return this.conexion;

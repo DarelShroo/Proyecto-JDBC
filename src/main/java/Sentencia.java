@@ -16,9 +16,9 @@ public class Sentencia {
     private int activa;
 
     public void visualizarHabitaciones(Statement stmt) throws SQLException {
-        ResultSet  rs = null;
+        ResultSet rs = null;
         try {
-            rs= stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
+            rs = stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
             System.out.println("codHotel" + "\t#\t" + "nomHotel" + "\t#\t" + "numHabitacion" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
             while (rs.next()) {
                 System.out.println(rs.getString("codHotel") + "\t#\t" +
@@ -56,76 +56,76 @@ public class Sentencia {
         this.sc = new Scanner(System.in);
         boolean continua = true;
         int rows;
-            try {
-                System.out.println("hoteles disponible:");
-                visualizarHoteles(stmt);
+        try {
+            System.out.println("hoteles disponible:");
+            visualizarHoteles(stmt);
+            System.out.println();
+            continua = true;
+            while (continua) {
+                System.out.print("codHotel: ");
+                codHotel = this.sc.nextLine();
+                pstmt = db.conexion().prepareStatement("SELECT * FROM hoteles where codHotel=?");
                 System.out.println();
-                continua = true;
-                while (continua) {
-                    System.out.print("codHotel: ");
-                    codHotel = this.sc.nextLine();
-                    pstmt = db.conexion().prepareStatement("SELECT * FROM hoteles where codHotel=?");
-                    System.out.println();
 
-                    pstmt.setString(1, codHotel);
-                    ResultSet rows2 = pstmt.executeQuery();
-                    if (rows2.next()) {
-                        continua = false;
-                        System.out.println("\nEl código de hotel existe\n");
-                    } else {
-                        System.out.println("El código de hotel no existe\n");
-                    }
-
-                }
-                System.out.println();
-                System.out.print("numHabitacion: ");
-                numHabitacion = sc.nextLine();
-
-                System.out.println();
-                System.out.print("capacidad: ");
-                capacidad = sc.nextInt();
-                System.out.println();
-                System.out.print("preciodia: ");
-                preciodia = sc.nextInt();
-                System.out.println();
-                System.out.print("activa: ");
-                activa = sc.nextInt();
-                continua = true;
-                while (continua) {
-                    if (activa == 0 || activa == 1) {
-                        continua = false;
-                    } else {
-                        System.out.print("\nmActiva solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
-                        activa = sc.nextInt();
-                        System.out.println();
-                    }
-                }
-                System.out.println();
-                pstmt = db.conexion().prepareStatement("INSERT INTO habitaciones (codHotel, numHabitacion, capacidad, preciodia, activa) VALUES (?,?,?,?,?)");
                 pstmt.setString(1, codHotel);
-                pstmt.setString(2, numHabitacion);
-                pstmt.setInt(3, capacidad);
-
-                pstmt.setInt(4, preciodia);
-                pstmt.setInt(5, activa);
-                rows = pstmt.executeUpdate();
-
-                if (rows > 0) {
-                    System.out.println("Se a insertado\n");
+                ResultSet rows2 = pstmt.executeQuery();
+                if (rows2.next()) {
+                    continua = false;
+                    System.out.println("\nEl código de hotel existe\n");
+                } else {
+                    System.out.println("El código de hotel no existe\n");
                 }
 
-            } catch (SQLIntegrityConstraintViolationException | SQLServerException e) {
-                System.out.println("A ocurrido un quebrantamiento de claves\n");
-            } catch (MysqlDataTruncation e){
-                System.out.println("Alguno de los parámetros introducidos es demasiado largo para ese campo");
-            } catch (SQLException e) {
-                System.out.println("A ocurrido un error\n");
-                e.printStackTrace();
-            } catch (NullPointerException | InputMismatchException e) {
-                System.out.println("\nNo puedes introducir un null en algúno de los parámetros.\n");
-            } finally {
-                close(db, stmt, pstmt, null, null);
             }
+            System.out.println();
+            System.out.print("numHabitacion: ");
+            numHabitacion = sc.nextLine();
+
+            System.out.println();
+            System.out.print("capacidad: ");
+            capacidad = sc.nextInt();
+            System.out.println();
+            System.out.print("preciodia: ");
+            preciodia = sc.nextInt();
+            System.out.println();
+            System.out.print("activa: ");
+            activa = sc.nextInt();
+            continua = true;
+            while (continua) {
+                if (activa == 0 || activa == 1) {
+                    continua = false;
+                } else {
+                    System.out.print("\nmActiva solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
+                    activa = sc.nextInt();
+                    System.out.println();
+                }
+            }
+            System.out.println();
+            pstmt = db.conexion().prepareStatement("INSERT INTO habitaciones (codHotel, numHabitacion, capacidad, preciodia, activa) VALUES (?,?,?,?,?)");
+            pstmt.setString(1, codHotel);
+            pstmt.setString(2, numHabitacion);
+            pstmt.setInt(3, capacidad);
+
+            pstmt.setInt(4, preciodia);
+            pstmt.setInt(5, activa);
+            rows = pstmt.executeUpdate();
+
+            if (rows > 0) {
+                System.out.println("Se a insertado\n");
+            }
+
+        } catch (SQLIntegrityConstraintViolationException | SQLServerException e) {
+            System.out.println("A ocurrido un quebrantamiento de claves\n");
+        } catch (MysqlDataTruncation e) {
+            System.out.println("Alguno de los parámetros introducidos es demasiado largo para ese campo");
+        } catch (SQLException e) {
+            System.out.println("A ocurrido un error\n");
+            e.printStackTrace();
+        } catch (NullPointerException | InputMismatchException e) {
+            System.out.println("\nNo puedes introducir un null en algúno de los parámetros.\n");
+        } finally {
+            close(db, stmt, pstmt, null, null);
+        }
 
     }
 
@@ -141,86 +141,72 @@ public class Sentencia {
         Statement stmt = conexion.createStatement();
         int regBorrar;
         int pos = 0;
-            PreparedStatement pstmtSelect = pstmt;
-            PreparedStatement pstmtBorrar = pstmt;
-            try {
-                pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
-                rs = pstmtSelect.executeQuery();
+        PreparedStatement pstmtSelect = pstmt;
+        PreparedStatement pstmtBorrar = pstmt;
+        try {
+            pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
+            rs = pstmtSelect.executeQuery();
 
-                while (rs.next()) {
-                    System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
-                    arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
-                    pos++;
-                }
-                System.out.print("\n¿Que numero de registro desea borrar?: ");
-                regBorrar = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size()-1);
+            while (rs.next()) {
+                System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
+                arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
+                pos++;
+            }
+            System.out.print("\n¿Que numero de registro desea borrar?: ");
+            regBorrar = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size() - 1);
 
-                habitacion = arrayListHabitacion.get(regBorrar);
-                numHabitacion = habitacion.getNumHabitacion();
-                codHotel = habitacion.getCodHotel();
+            habitacion = arrayListHabitacion.get(regBorrar);
+            numHabitacion = habitacion.getNumHabitacion();
+            codHotel = habitacion.getCodHotel();
 
-                pstmtComprobarHabitaciones = db.conexion().prepareStatement("SELECT * FROM estancias WHERE numHabitacion=?");
-                pstmtComprobarHabitaciones.setString(1, numHabitacion);
-                rs = pstmtComprobarHabitaciones.executeQuery();
-                if (rs.next()) {
-                    sc.nextLine();
-                    System.out.println("¿Quiere borrar todos las habitaciones con ese código de hotel? , escriba si o no\n");
+            pstmtComprobarHabitaciones = db.conexion().prepareStatement("SELECT * FROM estancias WHERE numHabitacion=?");
+            pstmtComprobarHabitaciones.setString(1, numHabitacion);
+            rs = pstmtComprobarHabitaciones.executeQuery();
+            if (rs.next()) {
+                sc.nextLine();
+                System.out.println("¿Quiere borrar todos las habitaciones con ese código de hotel? , escriba si o no\n");
+                opcion = sc.nextLine();
+            } else {
+                opcion = "no";
+            }
+            do {
+                if (opcion.equals("si")) {
+                    pstmtBorrar = db.conexion().prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
+                    pstmtBorrar.setString(1, codHotel);
+                    rows = pstmtBorrar.executeUpdate();
+                } else if (opcion.equals("no")) {
+                    pstmtBorrar = db.conexion().prepareStatement("DELETE FROM habitaciones WHERE codHotel=? and numHabitacion=?");
+                    pstmtBorrar.setString(1, codHotel);
+                    pstmtBorrar.setString(2, numHabitacion);
+                    rows = pstmtBorrar.executeUpdate();
+                } else {
+                    System.out.print("No es una opción válida, escriba denuevo la opción:");
                     opcion = sc.nextLine();
-                } else {
-                    opcion = "no";
                 }
-                do {
-                    if (opcion.equals("si")) {
-                        pstmtBorrar = db.conexion().prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
-                        pstmtBorrar.setString(1, codHotel);
-                        rows = pstmtBorrar.executeUpdate();
-                    } else if (opcion.equals("no")) {
-                        pstmtBorrar = db.conexion().prepareStatement("DELETE FROM habitaciones WHERE codHotel=? and numHabitacion=?");
-                        pstmtBorrar.setString(1, codHotel);
-                        pstmtBorrar.setString(2, numHabitacion);
-                        rows = pstmtBorrar.executeUpdate();
-                    } else {
-                        System.out.print("No es una opción válida, escriba denuevo la opción:");
-                        opcion = sc.nextLine();
-                    }
-                } while (!opcion.equals("si") && !opcion.equals("no"));
+            } while (!opcion.equals("si") && !opcion.equals("no"));
 
-                if (rows > 0) {
-                    System.out.println("\nBorrado con éxito\n");
-                } else {
-                    System.out.println("\nNo se a borrado ningún registro\n");
-                }
-            } catch (SQLIntegrityConstraintViolationException e) {
-                System.out.println("\nA ocurrido un error al borrar el registro o los registros \n");
-            }catch(NullPointerException e){
-                System.out.println("Algún parámetro está a null");
+            if (rows > 0) {
+                System.out.println("\nBorrado con éxito\n");
+            } else {
+                System.out.println("\nNo se a borrado ningún registro\n");
             }
-            catch (InputMismatchException e){
-                System.out.println("A ocurrido un error");
-            }catch (SQLException e) {
-                e.printStackTrace();
-            } finally {
-                if (pstmtBorrar != null) {
-                    pstmtBorrar.close();
-                } else if (pstmtComprobarHabitaciones != null) {
-                    pstmtComprobarHabitaciones.close();
-                } else if (pstmtSelect != null) {
-                    pstmtSelect.close();
-                }
-            }
-    }
-
-    private int compruebaTamanioIndex(int nextInt, int tamanioIndex) {
-        boolean continua = true;
-        while(continua){
-            if(nextInt > tamanioIndex){
-                System.out.print("Escriba un numero de registro válido: ");
-                nextInt = sc.nextInt();
-            }else {
-                continua=false;
+        } catch (SQLIntegrityConstraintViolationException e) {
+            System.out.println("\nA ocurrido un error al borrar el registro o los registros \n");
+        } catch (NullPointerException e) {
+            System.out.println("Algún parámetro está a null");
+        } catch (InputMismatchException e) {
+            System.out.println("A ocurrido un error");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (pstmtBorrar != null) {
+                pstmtBorrar.close();
+            } else if (pstmtComprobarHabitaciones != null) {
+                pstmtComprobarHabitaciones.close();
+            } else if (pstmtSelect != null) {
+                pstmtSelect.close();
             }
         }
-        return nextInt;
     }
 
     public void modificarHabitacion(Conexion db, String nomBd) throws SQLException {
@@ -229,55 +215,56 @@ public class Sentencia {
         ArrayList<Habitacion> arrayListHabitacion = new ArrayList<>();
         PreparedStatement pstmt = null;
         int regMod;
-            try {
-                int pos = 0;
-                pstmt = db.conexion().prepareStatement("select * from habitaciones");
-                rs = pstmt.executeQuery();
-                Habitacion habitacion;
+        try {
+            int pos = 0;
+            pstmt = db.conexion().prepareStatement("select * from habitaciones");
+            rs = pstmt.executeQuery();
+            Habitacion habitacion;
 
-                while (rs.next()) {
-                    System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
-                    arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
-                    pos++;
-                }
-                System.out.println("¿Que registro desea modificar?");
-                regMod = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size()-1);
-                habitacion = arrayListHabitacion.get(regMod);
-                System.out.println("Vas a modificar un registro con: ");
-                System.out.print("codHotel: " + habitacion.getCodHotel() + "\n");
-                System.out.print("numHabitacion: " + habitacion.getNumHabitacion() + "\n");
-                System.out.print("capacidad: ");
-                habitacion.setCapacidad(sc.nextInt());
-                System.out.println();
-                System.out.print("preciodia: ");
-                habitacion.setPreciodia(sc.nextInt());
-                System.out.println();
-                System.out.print("activa: ");
-                habitacion.setActiva(compruebaActiva(sc.nextInt()));
-                System.out.println();
-
-                pstmt = db.conexion().prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
-                pstmt.setInt(1, habitacion.getCapacidad());
-                pstmt.setInt(2, habitacion.getPreciodia());
-                pstmt.setInt(3, habitacion.getActiva());
-                pstmt.setString(4, habitacion.getCodHotel());
-                pstmt.setString(5, habitacion.getNumHabitacion());
-                int rows = pstmt.executeUpdate();
-                if(rows>0){
-                    System.out.println("Modificación realizada");
-                }
-            }catch(NullPointerException e){
-                System.out.println("Algún parámetro está a null");
-            } catch (SQLException | InputMismatchException e) {
-                System.out.println("A ocurrido un error\n");
-            } finally {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (db != null) {
-                    db.conexion().close();
-                }
+            while (rs.next()) {
+                System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
+                arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
+                pos++;
             }
+
+            System.out.println("¿Que registro desea modificar?");
+            regMod = compruebaTamanioIndex(sc.nextInt(), arrayListHabitacion.size() - 1);
+            habitacion = arrayListHabitacion.get(regMod);
+            System.out.println("Vas a modificar un registro con: ");
+            System.out.print("codHotel: " + habitacion.getCodHotel() + "\n");
+            System.out.print("numHabitacion: " + habitacion.getNumHabitacion() + "\n");
+            System.out.print("capacidad: ");
+            habitacion.setCapacidad(sc.nextInt());
+            System.out.println();
+            System.out.print("preciodia: ");
+            habitacion.setPreciodia(sc.nextInt());
+            System.out.println();
+            System.out.print("activa: ");
+            habitacion.setActiva(compruebaActiva(sc.nextInt()));
+            System.out.println();
+
+            pstmt = db.conexion().prepareStatement("UPDATE habitaciones SET capacidad=?, preciodia=?, activa=? WHERE (codHotel=? and numHabitacion=?)");
+            pstmt.setInt(1, habitacion.getCapacidad());
+            pstmt.setInt(2, habitacion.getPreciodia());
+            pstmt.setInt(3, habitacion.getActiva());
+            pstmt.setString(4, habitacion.getCodHotel());
+            pstmt.setString(5, habitacion.getNumHabitacion());
+            int rows = pstmt.executeUpdate();
+            if (rows > 0) {
+                System.out.println("Modificación realizada");
+            }
+        } catch (NullPointerException e) {
+            System.out.println("Algún parámetro está a null");
+        } catch (SQLException | InputMismatchException e) {
+            System.out.println("A ocurrido un error\n");
+        } finally {
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (db != null) {
+                db.conexion().close();
+            }
+        }
     }
 
     public void procListaHabitacionesNomHotel(Conexion db, String nomBd) throws SQLException {
@@ -300,9 +287,8 @@ public class Sentencia {
                 System.out.println();
             } catch (SQLException e) {
                 System.out.println("A ocurrido algún error");
-                e.printStackTrace();
             } finally {
-               close(db, null, null, rs, null);
+                close(db, null, null, rs, null);
             }
         } else {
             System.out.println("No hay procedimientos en access");
@@ -367,11 +353,10 @@ public class Sentencia {
 
             } catch (MysqlDataTruncation e) {
                 System.out.println("Algún parámetro introducido es mas largo del permitido\n");
-            } catch (SQLIntegrityConstraintViolationException e){
+            } catch (SQLIntegrityConstraintViolationException e) {
                 System.out.println("A ocurrido un quebrantamiento de claves");
             } catch (SQLException e) {
                 System.out.println("A ocurrido algún error\n");
-                e.printStackTrace();
             } catch (InputMismatchException e) {
                 System.out.println("Has introducido una letra o simbolo en un parámetro de tipo numérico\n");
             } finally {
@@ -380,20 +365,6 @@ public class Sentencia {
         } else {
             System.out.println("No hay procedimientos en access");
         }
-    }
-
-    private int compruebaActiva(int activa) {
-        boolean continua = true;
-        while (continua) {
-            if (activa == 0 || activa == 1) {
-                continua = false;
-            } else {
-                System.out.print("Activa solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
-                activa = sc.nextInt();
-                System.out.println();
-            }
-        }
-        return activa;
     }
 
     public void procCantidadHabitaciones(Conexion db, Statement stmt, String nomBd) throws SQLException {
@@ -473,26 +444,54 @@ public class Sentencia {
                 cstmtFunTotalEstancias.execute();
                 System.out.println("SumaTotalEstancia = " + cstmtFunTotalEstancias.getInt(1));
             } catch (SQLException e) {
-                System.out.println();            }
-            finally {
-                close(null,null,pstmt, null, cstmtFunTotalEstancias);
+                System.out.println();
+            } finally {
+                close(null, null, pstmt, null, cstmtFunTotalEstancias);
             }
         } else {
             System.out.println("No hay funciones en access");
         }
     }
 
-    private void close (Conexion db, Statement stmt, PreparedStatement pstmt, ResultSet rs, CallableStatement cstmt) throws SQLException {
-        if(db != null){
+    private void close(Conexion db, Statement stmt, PreparedStatement pstmt, ResultSet rs, CallableStatement cstmt) throws SQLException {
+        if (db != null) {
             db.conexion().close();
-        }else  if(stmt != null){
+        } else if (stmt != null) {
             stmt.close();
-        }else if(pstmt!=null){
+        } else if (pstmt != null) {
             pstmt.close();
-        }else if(rs!= null){
+        } else if (rs != null) {
             rs.close();
-        }else if(cstmt!=null){
+        } else if (cstmt != null) {
             cstmt.close();
         }
     }
+
+    private int compruebaTamanioIndex(int nextInt, int tamanioIndex) {
+        boolean continua = true;
+        while (continua) {
+            if (nextInt > tamanioIndex) {
+                System.out.print("Escriba un numero de registro válido: ");
+                nextInt = sc.nextInt();
+            } else {
+                continua = false;
+            }
+        }
+        return nextInt;
+    }
+
+    private int compruebaActiva(int activa) {
+        boolean continua = true;
+        while (continua) {
+            if (activa == 0 || activa == 1) {
+                continua = false;
+            } else {
+                System.out.print("Activa solo tiene valor de 1 o 0 vuelve a escribir el valor activa: ");
+                activa = sc.nextInt();
+                System.out.println();
+            }
+        }
+        return activa;
+    }
+
 }
