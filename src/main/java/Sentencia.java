@@ -149,7 +149,7 @@ public class Sentencia {
         try {
             pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmtSelect.executeQuery();
-
+            System.out.println("                 codHotel "+"\t#\t" +"numHabitacion"+"\t#\t" +"capacidad"+"\t#\t" +"preciodia"+"\t#\t" +"activa");
             while (rs.next()) {
                 System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
@@ -167,14 +167,14 @@ public class Sentencia {
             rs = pstmtComprobarHabitaciones.executeQuery();
             if (rs.next()) {
                 sc.nextLine();
-                System.out.println("¿Quiere borrar todos las habitaciones con ese código de hotel? , escriba si o no\n");
+                System.out.println("¿Quiere borrar todos las estancias con ese código de hotel? , escriba si o no\n");
                 opcion = sc.nextLine();
             } else {
                 opcion = "no";
             }
             do {
                 if (opcion.equals("si")) {
-                    pstmtBorrar = db.conexion().prepareStatement("DELETE FROM habitaciones WHERE codHotel=?");
+                    pstmtBorrar = db.conexion().prepareStatement("DELETE FROM estancias WHERE codHotel=?");
                     pstmtBorrar.setString(1, codHotel);
                     rows = pstmtBorrar.executeUpdate();
                 } else if (opcion.equals("no")) {
@@ -223,7 +223,7 @@ public class Sentencia {
             pstmt = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmt.executeQuery();
             Habitacion habitacion;
-
+            System.out.println("               codHotel"+"\t#\t" +"numHabitacion"+"\t#\t" +"capacidad"+"\t#\t" +"preciodia"+"\t#\t" +"activa");
             while (rs.next()) {
                 System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
@@ -396,8 +396,8 @@ public class Sentencia {
                     }
 
                 }
-                System.out.println();
 
+                System.out.println();
                 System.out.print("nomHotel: ");
                 this.nomHotel = this.sc.nextLine();
                 System.out.println();
@@ -497,5 +497,4 @@ public class Sentencia {
         }
         return activa;
     }
-
 }
