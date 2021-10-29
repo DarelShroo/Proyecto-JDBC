@@ -15,8 +15,7 @@ public class Sentencia {
     private int preciodia;
     private int activa;
 
-    public void visualizarHabitaciones(Conexion db) throws SQLException {
-        Statement stmt = db.conexion().createStatement();
+    public void visualizarHabitaciones(Statement stmt) throws SQLException {
         ResultSet rs = null;
         try {
             rs = stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
@@ -37,8 +36,7 @@ public class Sentencia {
         }
     }
 
-    protected void visualizarHoteles(Conexion db) throws SQLException {
-        Statement stmt = db.conexion().createStatement();
+    protected void visualizarHoteles(Statement stmt) throws SQLException {
         ResultSet rs = null;
         try {
             rs = stmt.executeQuery("select * from hoteles");
@@ -54,14 +52,13 @@ public class Sentencia {
         }
     }
 
-    protected void insertarHabitacion(Conexion db, String nomBd) throws SQLException {
-        PreparedStatement pstmt;
+    protected void insertarHabitacion(Conexion db, PreparedStatement pstmt, Statement stmt, String nomBd) throws SQLException {
         this.sc = new Scanner(System.in);
         boolean continua = true;
         int rows;
         try {
             System.out.println("hoteles disponible:");
-            visualizarHoteles(db);
+            visualizarHoteles(stmt);
             System.out.println();
             continua = true;
             while (continua) {
@@ -127,25 +124,25 @@ public class Sentencia {
         } catch (NullPointerException | InputMismatchException e) {
             System.out.println("\nNo puedes introducir un null en algúno de los parámetros.\n");
         } finally {
-            close(db, null, null, null, null);
+            close(db, stmt, pstmt, null, null);
         }
 
     }
 
-    protected void borrarHabitacion(Conexion db, String nomBd) throws SQLException {
+    protected void borrarHabitacion(Conexion db, PreparedStatement pstmt, String nomBd) throws SQLException {
         sc = new Scanner(System.in);
         int rows = 0;
         String opcion = "";
         ResultSet rs;
-        PreparedStatement pstmtComprobarHabitaciones = null;
+        PreparedStatement pstmtComprobarHabitaciones = pstmt;
         Habitacion habitacion;
         ArrayList<Habitacion> arrayListHabitacion = new ArrayList<>();
         Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
         Statement stmt = conexion.createStatement();
         int regBorrar;
         int pos = 0;
-        PreparedStatement pstmtSelect = null;
-        PreparedStatement pstmtBorrar = null;
+        PreparedStatement pstmtSelect = pstmt;
+        PreparedStatement pstmtBorrar = pstmt;
         try {
             pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmtSelect.executeQuery();
@@ -298,7 +295,7 @@ public class Sentencia {
         }
     }
 
-    public void procInsertarHabitacion(Conexion db,String nomBd) throws SQLException {
+    public void procInsertarHabitacion(Conexion db, Statement stmt, String nomBd) throws SQLException {
         CallableStatement cstmtProcInsertarHabitacion = null;
         PreparedStatement pstmt;
         ResultSet rs;
@@ -307,7 +304,7 @@ public class Sentencia {
         if (!nomBd.equals("access")) {
             try {
                 System.out.println("hoteles disponible:");
-                visualizarHoteles(db);
+                visualizarHoteles(stmt);
                 System.out.println();
                 continua = true;
                 while (continua) {
@@ -363,14 +360,14 @@ public class Sentencia {
             } catch (InputMismatchException e) {
                 System.out.println("Has introducido una letra o simbolo en un parámetro de tipo numérico\n");
             } finally {
-                close(db, null, null, null, cstmtProcInsertarHabitacion);
+                close(db, stmt, null, null, cstmtProcInsertarHabitacion);
             }
         } else {
             System.out.println("No hay procedimientos en access");
         }
     }
 
-    public void procCantidadHabitaciones(Conexion db, String nomBd) throws SQLException {
+    public void procCantidadHabitaciones(Conexion db, Statement stmt, String nomBd) throws SQLException {
         CallableStatement cstmtProcCantidadHabitaciones = null;
         PreparedStatement pstmt;
         sc = new Scanner(System.in);
@@ -378,7 +375,7 @@ public class Sentencia {
         if (!nomBd.equals("access")) {
             try {
                 System.out.println("hoteles disponible:");
-                visualizarHoteles(db);
+                visualizarHoteles(stmt);
                 System.out.println();
                 continua = true;
                 while (continua) {
@@ -425,15 +422,14 @@ public class Sentencia {
             } catch (InputMismatchException e) {
                 System.out.println("Has introducido una letra o simbolo en un parámetro de tipo numérico\n");
             } finally {
-                close(db, null, null, null, cstmtProcCantidadHabitaciones);
+                close(db, stmt, null, null, cstmtProcCantidadHabitaciones);
             }
         } else {
             System.out.println("No hay procedimientos en access");
         }
     }
 
-    public void funcSumaTotalEstancias(Conexion db, String nomBd) throws SQLException {
-        PreparedStatement pstmt = null;
+    public void funcSumaTotalEstancias(Conexion db, PreparedStatement pstmt, String nomBd) throws SQLException {
         this.sc = new Scanner(System.in);
         String coddnionie;
         CallableStatement cstmtFunTotalEstancias = null;

@@ -9,11 +9,12 @@ import java.util.Scanner;
 public class ApiUsuario {
     private Conexion db;
     private String nomBd;
-    private Scanner sc;
     private Statement stmt;
+    private Scanner sc;
     private String continuar;
     private String opcion;
     private Sentencia sentencia;
+    private PreparedStatement pstmt;
 
     public ApiUsuario() {
     }
@@ -39,18 +40,18 @@ public class ApiUsuario {
                 opcion = sc.nextLine();
                 switch (opcion) {
                     case "0":
-                        sentencia.visualizarHabitaciones(db(nomBd));
+                        sentencia.visualizarHabitaciones(stmt);
                         db(nomBd).conexion().close();
                         break;
                     case "1":
-                        sentencia.insertarHabitacion(db, nomBd);
+                        sentencia.insertarHabitacion(db(nomBd), pstmt, stmt, nomBd);
                         db(nomBd).conexion().close();
                         break;
                     case "2":
                         cambioBd();
                         break;
                     case "3":
-                        sentencia.borrarHabitacion(db(nomBd), nomBd);
+                        sentencia.borrarHabitacion(db(nomBd), pstmt, nomBd);
                         db(nomBd).conexion().close();
                         break;
                     case "4":
@@ -60,13 +61,13 @@ public class ApiUsuario {
                         sentencia.procListaHabitacionesNomHotel(db(nomBd), nomBd);
                         break;
                     case "6":
-                        sentencia.procInsertarHabitacion(db(nomBd), nomBd);
+                        sentencia.procInsertarHabitacion(db(nomBd), stmt, nomBd);
                         break;
                     case "7":
-                        sentencia.procCantidadHabitaciones(db(nomBd), nomBd);
+                        sentencia.procCantidadHabitaciones(db(nomBd), stmt, nomBd);
                         break;
                     case "8":
-                        sentencia.funcSumaTotalEstancias(db(nomBd), nomBd);
+                        sentencia.funcSumaTotalEstancias(db(nomBd), pstmt, nomBd);
                         break;
                     case "9":
                         continuar = "fin";
