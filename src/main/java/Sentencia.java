@@ -20,14 +20,14 @@ public class Sentencia {
         ResultSet rs = null;
         try {
             rs = stmt.executeQuery("select habitaciones.*, nomHotel from habitaciones inner join hoteles on habitaciones.codHotel = hoteles.codHotel");
-            System.out.println("codHotel" + "\t#\t" + "nomHotel" + "\t#\t" + "numHabitacion" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+            System.out.printf("|%14s|%14s|%14s|%14s|%14s|%n","codHotel","nomHotel" , "numHabitacion" , "preciodia", "activa");
             while (rs.next()) {
-                System.out.println(rs.getString("codHotel") + "\t#\t" +
-                        rs.getString("nomHotel") + "\t#\t" +
-                        rs.getString("numHabitacion") + "\t#\t" +
-                        rs.getInt("capacidad") + "\t#\t" +
-                        rs.getInt("preciodia") + "\t#\t" +
-                        rs.getInt("activa") + "\t#\t");
+                System.out.printf("|%14s|%14s|%14s|%14s|%14s|%n",rs.getString("codHotel"),
+                        rs.getString("nomHotel") ,
+                        rs.getString("numHabitacion") ,
+                        rs.getInt("capacidad"),
+                        rs.getInt("preciodia") ,
+                        rs.getInt("activa"));
             }
             System.out.println();
         } catch (SQLException e) {
@@ -42,9 +42,10 @@ public class Sentencia {
         ResultSet rs = null;
         try {
             rs = stmt.executeQuery("select * from hoteles");
+            System.out.printf("|%14s|%14s|%n","codHotel", "nomHotel");
             while (rs.next()) {
-                System.out.println("codHotel = " + rs.getString("codHotel") + "\t#" +
-                        "nomHotel = " + rs.getString("nomHotel") + "#\t");
+                System.out.printf("|%14s|%14s|%n", rs.getString("codHotel"),
+                        rs.getString("nomHotel"));
             }
             System.out.println();
         } catch (SQLException e) {
@@ -63,7 +64,6 @@ public class Sentencia {
             System.out.println("hoteles disponible:");
             visualizarHoteles(db);
             System.out.println();
-            continua = true;
             while (continua) {
                 System.out.print("codHotel: ");
                 codHotel = this.sc.nextLine();
@@ -135,23 +135,27 @@ public class Sentencia {
     protected void borrarHabitacion(Conexion db, String nomBd) throws SQLException {
         sc = new Scanner(System.in);
         int rows = 0;
+        int regBorrar;
+        int pos = 0;
         String opcion = "";
         ResultSet rs;
         PreparedStatement pstmtComprobarHabitaciones = null;
         Habitacion habitacion;
         ArrayList<Habitacion> arrayListHabitacion = new ArrayList<>();
-        Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
-        Statement stmt = conexion.createStatement();
-        int regBorrar;
-        int pos = 0;
         PreparedStatement pstmtSelect = null;
         PreparedStatement pstmtBorrar = null;
         try {
             pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmtSelect.executeQuery();
-            System.out.println("                 codHotel " + "\t#\t" + "numHabitacion" + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+            System.out.printf("|%14s|%14s|%14s|%14s|%14s|%14s|%n","numeroRegistro","codHotel","numHabitacion" ,"capacidad" , "preciodia","activa");
             while (rs.next()) {
-                System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
+                System.out.printf("|%14s|%14s|%14s|%14s|%14s|%14s|%n",
+                        pos,
+                        rs.getString("codHotel"),
+                        rs.getString("numHabitacion"),
+                        rs.getInt("capacidad"),
+                        rs.getInt("preciodia"),
+                        rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
                 pos++;
             }
@@ -223,9 +227,16 @@ public class Sentencia {
             pstmt = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmt.executeQuery();
             Habitacion habitacion;
-            System.out.println("               codHotel" + "\t#\t" + "numHabitacion" + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+            System.out.printf("|%14s|%14s|%14s|%14s|%14s|%14s|%n","numeroRegistro","codHotel" , "numHabitacion" , "capacidad", "preciodia" , "activa");
+
             while (rs.next()) {
-                System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
+                System.out.printf("|%14s|%14s|%14s|%14s|%14s|%14s|%n",
+                        pos,
+                        rs.getString("codHotel"),
+                        rs.getString("numHabitacion"),
+                        rs.getInt("capacidad"),
+                        rs.getInt("preciodia"),
+                        rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
                 pos++;
             }
@@ -285,12 +296,12 @@ public class Sentencia {
                 rs = procListHabNomHotel.executeQuery();
                 System.out.println("Lista de habitaciones ordenadas por preciodia y  capacidad en orden ascendente");
                 if (rs.next()) {
-                    System.out.println("numHabitacion " + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+                    System.out.printf("|%14s|%14s|%14s|%14s|%n","numHabitacion" , "capacidad", "preciodia" , "activa");
                 } else {
                     System.out.println("Este hotel no existe");
                 }
                 while (rs.next()) {
-                    System.out.print(rs.getString("numHabitacion") + "\t\t\t#\t" + rs.getInt("capacidad") + "\t\t\t#\t" + rs.getInt("preciodia") + "\t\t\t\t#\t" + rs.getInt("activa") + "\n");
+                    System.out.printf("%14s|%14s|%14s|%14s|%n",rs.getString("numHabitacion") ,rs.getInt("capacidad") , rs.getInt("preciodia") , rs.getInt("activa") + "\n");
                 }
             } catch (SQLException e) {
                 System.out.println("A ocurrido algún error");
@@ -433,7 +444,9 @@ public class Sentencia {
 
                 System.out.println("Numero de habitaciones totales con codHotel (" + this.codHotel + ") y nomHotel (" + this.nomHotel + ") es igual a "
                         + cstmtProcCantidadHabitaciones.getInt(4) +
-                        " \nCon el mismo codHotel y nomHotel hay un total de " + cstmtProcCantidadHabitaciones.getInt(5) + " habitaciones por debajo del precio dia (" + this.preciodia + ")   ");
+                        " \nCon el mismo codHotel y nomHotel hay un total de " +
+                        cstmtProcCantidadHabitaciones.getInt(5) +
+                        " habitaciones por debajo del precio dia (" + this.preciodia + ")   ");
 
             } catch (MysqlDataTruncation e) {
                 System.out.println("Algún parámetro introducido es mas largo del permitido\n");
