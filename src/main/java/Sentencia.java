@@ -149,7 +149,7 @@ public class Sentencia {
         try {
             pstmtSelect = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmtSelect.executeQuery();
-            System.out.println("                 codHotel "+"\t#\t" +"numHabitacion"+"\t#\t" +"capacidad"+"\t#\t" +"preciodia"+"\t#\t" +"activa");
+            System.out.println("                 codHotel " + "\t#\t" + "numHabitacion" + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
             while (rs.next()) {
                 System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
@@ -223,7 +223,7 @@ public class Sentencia {
             pstmt = db.conexion().prepareStatement("select * from habitaciones");
             rs = pstmt.executeQuery();
             Habitacion habitacion;
-            System.out.println("               codHotel"+"\t#\t" +"numHabitacion"+"\t#\t" +"capacidad"+"\t#\t" +"preciodia"+"\t#\t" +"activa");
+            System.out.println("               codHotel" + "\t#\t" + "numHabitacion" + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
             while (rs.next()) {
                 System.out.println("numeroRegistro = " + pos + "\t#\t" + rs.getString("codHotel") + "\t#\t" + rs.getString("numHabitacion") + "\t#\t" + rs.getInt("capacidad") + "\t#\t" + rs.getInt("preciodia") + "\t#\t" + rs.getInt("activa"));
                 arrayListHabitacion.add(new Habitacion(rs.getString("codHotel"), rs.getString("numHabitacion"), rs.getInt("capacidad"), rs.getInt("preciodia"), rs.getInt("activa")));
@@ -277,17 +277,21 @@ public class Sentencia {
         String nomHotel;
         if (!nomBd.equals("access")) {
             try {
+                visualizarHoteles(db);
                 System.out.println("Escribe el nombre de hotel");
                 nomHotel = sc.nextLine();
                 procListHabNomHotel = db.conexion().prepareCall("{ call lista_habitaciones_nomHotel(?)}");
                 procListHabNomHotel.setString(1, nomHotel);
                 rs = procListHabNomHotel.executeQuery();
-
-                System.out.println("numHabitacion " + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+                System.out.println("Lista de habitaciones ordenadas por preciodia y  capacidad en orden ascendente");
+                if (rs.next()) {
+                    System.out.println("numHabitacion " + "\t#\t" + "capacidad" + "\t#\t" + "preciodia" + "\t#\t" + "activa");
+                } else {
+                    System.out.println("Este hotel no existe");
+                }
                 while (rs.next()) {
                     System.out.print(rs.getString("numHabitacion") + "\t\t\t#\t" + rs.getInt("capacidad") + "\t\t\t#\t" + rs.getInt("preciodia") + "\t\t\t\t#\t" + rs.getInt("activa") + "\n");
                 }
-                System.out.println();
             } catch (SQLException e) {
                 System.out.println("A ocurrido algún error");
             } finally {
@@ -298,7 +302,7 @@ public class Sentencia {
         }
     }
 
-    public void procInsertarHabitacion(Conexion db,String nomBd) throws SQLException {
+    public void procInsertarHabitacion(Conexion db, String nomBd) throws SQLException {
         CallableStatement cstmtProcInsertarHabitacion = null;
         PreparedStatement pstmt;
         ResultSet rs;
@@ -352,7 +356,18 @@ public class Sentencia {
 
                 cstmtProcInsertarHabitacion.execute();
 
-                System.out.println(cstmtProcInsertarHabitacion.getInt(6) + " " + cstmtProcInsertarHabitacion.getInt(7) + "\n");
+                if (cstmtProcInsertarHabitacion.getInt(6) == 1) {
+                    System.out.println("Hotel existe: " + cstmtProcInsertarHabitacion.getInt(6));
+                } else {
+                    System.out.println("Hotel no existe: " + cstmtProcInsertarHabitacion.getInt(6));
+                }
+
+                if (cstmtProcInsertarHabitacion.getInt(7) == 1) {
+                    System.out.println("La habitacion se insertó: " + cstmtProcInsertarHabitacion.getInt(7));
+                } else {
+                    System.out.println("La no habitacion se insertó " + cstmtProcInsertarHabitacion.getInt(7));
+                }
+
 
             } catch (MysqlDataTruncation e) {
                 System.out.println("Algún parámetro introducido es mas largo del permitido\n");
@@ -387,8 +402,8 @@ public class Sentencia {
                     System.out.println();
                     pstmt = db.conexion().prepareStatement("SELECT codHotel FROM hoteles WHERE codHotel = ?");
                     pstmt.setString(1, this.codHotel);
-                    boolean rows2 = pstmt.execute();
-                    if (rows2) {
+                    ResultSet rows2 = pstmt.executeQuery();
+                    if (rows2.next()) {
                         continua = false;
                         System.out.println("\nEl código de hotel existe\n");
                     } else {
@@ -416,7 +431,9 @@ public class Sentencia {
 
                 cstmtProcCantidadHabitaciones.execute();
 
-                System.out.println("Numero de habitaciones totales con codHotel = " + this.codHotel + " y nomHotel = " + this.nomHotel + " =" + cstmtProcCantidadHabitaciones.getInt(4) + " Numero de habitaciones por debajo del precio dia " + this.preciodia + " = " + cstmtProcCantidadHabitaciones.getInt(5) + "\n");
+                System.out.println("Numero de habitaciones totales con codHotel (" + this.codHotel + ") y nomHotel (" + this.nomHotel + ") es igual a "
+                        + cstmtProcCantidadHabitaciones.getInt(4) +
+                        " \nCon el mismo codHotel y nomHotel hay un total de " + cstmtProcCantidadHabitaciones.getInt(5) + " habitaciones por debajo del precio dia (" + this.preciodia + ")   ");
 
             } catch (MysqlDataTruncation e) {
                 System.out.println("Algún parámetro introducido es mas largo del permitido\n");
@@ -437,9 +454,22 @@ public class Sentencia {
         this.sc = new Scanner(System.in);
         String coddnionie;
         CallableStatement cstmtFunTotalEstancias = null;
+        boolean continuar = false;
         if (!nomBd.equals("access")) {
+            mostrarDNI(db);
             System.out.println("Escribe un cod dni o nie");
             coddnionie = sc.nextLine();
+            continuar = true;
+            int i = compruebaDNI(coddnionie, db);
+            while(continuar){
+                if (i > 0){
+                    continuar = false;
+                }else {
+                    System.out.println("Este coddnionie no existe, vuelve a escribirlo: ");
+                    coddnionie = sc.nextLine();
+                }
+            }
+
             System.out.println();
             try {
                 cstmtFunTotalEstancias = db.conexion().prepareCall("{? = call sumaTotalEstancias(?)}");
@@ -482,6 +512,39 @@ public class Sentencia {
             }
         }
         return nextInt;
+    }
+
+    private int compruebaDNI(String dni, Conexion db) {
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        int i = 0;
+        try {
+
+                pstmt = db.conexion().prepareStatement("SELECT COUNT(coddnionie) FROM clientes WHERE coddnionie = ?");
+                pstmt.setString(1, dni);
+                rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    i = rs.getInt(1);
+                }
+                return i;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    private void mostrarDNI(Conexion db) {
+        ResultSet rs = null;
+        try {
+            rs = db.conexion().prepareStatement("SELECT coddnionie FROM CLIENTES").executeQuery();
+            System.out.println("DNI disponibles");
+            while (rs.next()) {
+                System.out.println(rs.getString(1));
+            }
+            close(db, null, null, null, null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private int compruebaActiva(int activa) {

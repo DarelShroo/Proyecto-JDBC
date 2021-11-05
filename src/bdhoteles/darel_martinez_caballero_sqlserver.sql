@@ -1,3 +1,4 @@
+DROP DATABASE bdHoteles;
 CREATE DATABASE bdHoteles;
 GO
 USE bdHoteles;
@@ -70,15 +71,6 @@ INSERT INTO habitaciones VALUES ('E04', '109', default, 100, 1);
 
 GO
 INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('A00', 'DY', 500);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('A00', 'MD', 400);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('B01', 'PC', 300);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('B01', 'TD', 800);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('C02', 'DY', 700);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('C02', 'MD', 600);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('D03', 'PC', 200);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('D03', 'TD', 100);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('E04', 'DY', 900);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ('E04', 'MD', 400);
 
 GO
 INSERT INTO clientes VALUES ('20304050G', 'Alejandro', 'Española');
@@ -142,6 +134,7 @@ AS
 BEGIN
 	IF ((SELECT COUNT(*) from hoteles WHERE hoteles.codHotel = @codHotel) > 0)
 		BEGIN
+		insert into habitaciones values (@codHotel, @numHabitacion, @capacidad, @preciodia, @activa)
 		SET @salida1=1;
 		SET @salida2=1;
 		END

@@ -19,12 +19,14 @@ public class Conexion {
                     this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdhoteles", "root", "");
                     break;
                 case "sqlserver":
-                    this.conexion = DriverManager.getConnection("jdbc:sqlserver://localhost\\SQLEXPRESS;databaseName=bdhoteles", "sa", "sanandreas85");
+                    this.conexion = DriverManager.getConnection("jdbc:sqlserver://DESKTOP-LRA1LTK\\SQLEXPRESS;databaseName=bdHoteles", "sa", "sanandreas85");
                     break;
                 case"access":
                     this.conexion = DriverManager.getConnection("jdbc:ucanaccess://src/bdhoteles/darel_martinez_caballero_access.accdb");
                     break;
             }
+        }catch (NullPointerException e){
+            System.out.println("No se a podido establecer la conexión");
         } catch (Exception throwables) {
             System.out.println("A ocurrido un error\n");
         }

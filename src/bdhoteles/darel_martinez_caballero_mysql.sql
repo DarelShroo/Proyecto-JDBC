@@ -72,15 +72,6 @@ INSERT INTO habitaciones VALUES ("E04", "108", 3, 20, default);
 INSERT INTO habitaciones VALUES ("E04", "109", default, 100, 1);
 
 INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("A00", "DY", 500);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("A00", "MD", 400);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("B01", "PC", 300);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("B01", "TD", 800);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("C02", "DY", 700);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("C02", "MD", 600);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("D03", "PC", 200);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("D03", "TD", 100);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("E04", "DY", 900);
-INSERT INTO regimenes(codHotel, tipo, precio) VALUES ("E04", "MD", 400);
 
 INSERT INTO clientes VALUES ("20304050G", "Alejandro", "Española");
 INSERT INTO clientes VALUES ("87468463H", "Cristina", "Española");
